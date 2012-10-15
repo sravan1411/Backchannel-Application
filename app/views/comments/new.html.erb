@@ -1,0 +1,41 @@
+<fieldset style="margin-bottom: 15px;">
+  <legend>Post</legend>
+  <table style="width: 100%;">
+    <tr>
+      <td style="width: 30%; text-align: center;">
+        <p> Created By</p><br/>
+        <%= createdBy @post %>
+      </td>
+      <td style="text-align: left;">
+        <h2><%= @post.title %></h2>
+        <p>Content :</p><%=@post.content%>
+        <p>Category:</p><%= getCategory @post  %>
+      </td>
+    </tr>
+  </table>
+  <% if (@otherComments!=nil) && (@otherComments.length >0) %>
+      <fieldset>
+        <legend>Comments</legend>
+        <table style="width: 100%; background-color:#EDEFF4 ;">
+
+          <% @otherComments.each do |comment| %>
+              <tr>
+                <td style="width: 20%;">
+                  <p>By</p>
+                  <%= getUserName comment %>
+                </td>
+                <td style="text-align: left;">
+                  <p><%= comment.content  %></p>
+                </td>
+              </tr>
+          <% end %>
+
+        </table>
+      </fieldset>
+  <% end %>
+</fieldset>
+
+
+<%= render 'form' %>
+
+<%= link_to 'Back', posts_path %>

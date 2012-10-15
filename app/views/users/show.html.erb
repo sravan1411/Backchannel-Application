@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<fieldset style="width: 100%;">
+  <legend style="font-size: medium;"><b>User</b></legend>
+  <table style="width: 100%;margin-top: 30px;margin-bottom: 20px;">
+    <tr>
+      <td>Name</td>
+      <td>:<%= @user.name %></td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td>:<%= @user.email %></td>
+    </tr>
+    <tr>
+      <td>Is Admin</td>
+      <td>:<%= @user.isAdmin %></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align: right;">
+        <%= link_to 'Delete', @user, method: :delete, data: { confirm: 'Are you sure?' } %>
+      </td>
+    </tr>
+  </table>
+</fieldset>
+
+
+<%= link_to 'Back', users_path %>

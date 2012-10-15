@@ -1,0 +1,26 @@
+<div id="loginForm">
+  <fieldset>
+    <legend>Please Login</legend>
+    <% if flash[:alert]%>
+            <p id="notice"><%= flash[:alert] %></p>
+        <%end%>
+    <%=form_tag :controller => 'login',:action => 'create' do%>
+        <table style="width: 100%;">
+          <tr>
+            <td style="text-align: right; width: 40%;"><label for="UserName">User Name</label> </td>
+            <td style="text-align: left;"><%= text_field_tag :userName, params[:userName] %></td>
+          </tr>
+          <tr>
+            <td style="text-align: right;"><label for="password">Password</label></td>
+            <td style="text-align: left;"><%= password_field_tag :password, params[:password] %></td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding-left:40%;">
+              <%= submit_tag "Login" %>
+               <%= link_to "Sign Up", new_user_path %>
+            </td>
+          </tr>
+        </table>
+    <%end%>
+  </fieldset>
+</div>

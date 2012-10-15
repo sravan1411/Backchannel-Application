@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Project1Draft</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<div id="banner" >
+  <%= image_tag("logo.png") %>
+  <%= @page_title || "Backchannel Application" %>
+</div>
+<div style="float: right;width: 30%;margin-top: 50px;">
+  <%=form_tag search_path, :method => 'post' do%>
+      <%= text_field_tag :searchparam, params[:searchparam]  %>
+      <%= submit_tag "Search" %>
+  <% end %>
+</div>
+<div id="columns" >
+  <div id="side" >
+    <% if authenticated? %>
+    <% if IsAdmin? %>
+         <table>
+           <tr>
+             <td>
+               <a href="/categories">Categories</a>
+             </td>
+           </tr>
+           <tr>
+             <td>
+               <a href="/users">Users</a>
+             </td>
+           </tr>
+           <tr>
+             <td>
+               <a href="/posts">View Posts</a>
+             </td>
+           </tr>
+           <tr>
+             <td>
+               <%= link_to "View Report",users_report_path%>
+             </td>
+           </tr>
+         </table>
+      <% else %>
+            <table>
+              <tr>
+                <td>
+                  <a href="/posts/new">Create a Post</a>
+                </td>
+              </tr>
+            </table>
+    <% end %>
+  <% end %>
+
+  </div>
+  <div id="main" >
+    <table style="width: 50%;">
+      <tr>
+        <td style="text-align: right;">
+          <% if authenticated? %>
+              Welcome <%=session[:user_name]  %>
+              <br/>
+            <%=link_to "Logout", :controller=>'login', :action=>'destroy'%>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td> <%= yield %></td>
+      </tr>
+    </table>
+
+  </div>
+</div>
+</body>
+</html>

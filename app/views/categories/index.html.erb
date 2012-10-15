@@ -1,0 +1,36 @@
+<h1>Listing categories</h1>
+
+<% if @categories.length>0 %>
+   <fieldset style="width: 100%;">
+     <legend style="font-size: medium;">Listing Categories</legend>
+     <table style="width: 100%;margin-top: 20px;border: 1px solid;" cellspacing="2px">
+       <tr>
+         <th style="text-align: left;">Name</th>
+         <th style="text-align: left;">Description</th>
+         <th></th>
+         <th></th>
+       </tr>
+
+       <% @categories.each do |category| %>
+           <tr>
+             <td class="custom">
+             <%= link_to category do  %>  <%= category.name %>
+                   <% end %>
+             </td>
+             <td class="content_pc"><%= category.description  %></td>
+
+             <td><%= link_to 'Edit', edit_category_path(category) %></td>
+             <td><%= link_to 'Delete', category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+           </tr>
+       <% end %>
+     </table>
+   </fieldset>
+   <% else %>
+    <h1>No Categories Available</h1>
+<% end %>
+
+
+
+<br />
+
+<%= link_to 'New Category', new_category_path %>

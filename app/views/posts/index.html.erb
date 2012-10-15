@@ -1,0 +1,99 @@
+<script type="text/javascript" language="JavaScript1.5">
+    var div_id
+    $(document).ready(function(){
+        $('div[id*="vote"]').hide();
+        $('.link').click(function(){
+            div_id=$(this).data('postid');
+            $("#"+div_id).dialog({
+                resizable: false,
+                height: 200,
+                modal: true,
+                autoOpen: true,
+                title : "Voted by",
+                buttons: {
+                    "Ok" : function(){
+                        $(this).dialog("close")
+                    }
+                }
+            });
+        });
+    });
+
+
+
+
+
+</script>
+<% if @posts.length >0 %>
+<h1>Listing posts</h1>
+<table>
+<% @posts.each do |post| %>
+  <tr>
+    <td style="width: 100%;">
+      <fieldset style="width: 100%;">
+        <legend>Post</legend>
+        <table cellspacing="3" style="width: 100%;background-color: #f8f8ff;" >
+          <tr>
+            <td style="width: 20%;text-align: center; border: 1px solid;">
+
+              <%= createdBy post  %>
+            </td>
+            <td style="text-align: left;">
+              <%= link_to post, :controller=>'posts', :action => 'show' do  %>
+              <b style="font-size:12px;"><%=post.title %> </b>
+              <% end %>
+              <div class="content_pc"><%= post.content %></div>
+              <p>Category:<%= getCategory post %> </p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="text-align: right;">
+              <% if IsCreatedByCurrentUser? post.User_id %>
+              <%= link_to 'Edit', edit_post_path(post) %>
+              <% end %>
+              <% if (IsCreatedByCurrentUser? post.User_id) || (IsAdmin?)   %>
+              &nbsp;<%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="text-align: left;">
+              <% if !(hasUserVoted? post) && !(IsAdmin?) && !(IsCreatedByCurrentUser? post.User_id) %>
+                  <%= link_to "Vote", vote_post_path(post)  %>
+              <% end %>
+              <% if (getVotes(post).length>0) && !(IsAdmin?) %>
+
+                  <% if hasUserVoted? post %>
+                      You and <span class="link" style="cursor: pointer;color:#3B5998" data-postid="votes<%= post.id %>">
+                   <%= (getVotes(post).length)-1 %></span> others have voted.
+                  <% else %>
+                        <span class="link" style="cursor: pointer;color:#3B5998" data-postid="votes<%= post.id %>">
+                   <%= (getVotes(post).length) %></span> people have voted.
+                  <% end %>
+              <% end %>
+              <div id='votes<%= post.id%>'>
+                <ul>
+                  <% getVotes(post).each do |vote|%>
+                      <% if vote.User_id != session[:user_id] %>
+                          <li><%= getUserNamePosts vote.User_id %> </li>
+                      <% end %>
+                  <% end %>
+                </ul>
+              </div>
+
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+
+    <td></td>
+  </tr>
+<% end %>
+</table>
+ <% else %>
+    <h1> No Posts Available</h1>
+<% end %>
+<br />
+<% if (authenticated?) && !(IsAdmin?) %>
+<%= link_to 'New Post', new_post_path %>
+<% end %>

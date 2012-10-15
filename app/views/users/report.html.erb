@@ -1,0 +1,32 @@
+<% if @users.length >0 %>
+    <fieldset style="width: 100%; ">
+      <legend style="font-size: medium;">Listing Posts</legend>
+
+    <table style="width: 100%; padding-top: 20px;">
+      <tr>
+        <th style="text-align: left;"><b>User</b></th>
+        <th style="text-align: left;"><b>Posts Created</b></th>
+        <th style="text-align: left;"><b>Commented</b></th>
+        <th style="text-align: left;"><b>Votes</b></th>
+        </tr>
+      <% @users.each do |user| %>
+          <tr>
+            <td>
+                <b><%=user.name%></b>
+            </td>
+            <td>
+               <%= getPostsCount(user.id)  %>
+            </td>
+            <td>
+                <%= getCommentsCount(user.id) %>
+            </td>
+            <td>
+              <%=getVotesCount(user.id)  %>
+            </td>
+          </tr>
+      <% end %>
+    </table>
+    </fieldset>
+<% end %>
+
+

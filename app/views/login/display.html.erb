@@ -1,0 +1,6 @@
+<div id="profile">
+  <% if flash[:loginMessage]%>
+      <p id="notice"><%= flash[:loginMessage] %></p>
+  <%end%>
+  <h1>Welcome <%= @logged_in_user %></h1>
+</div>

@@ -1,0 +1,54 @@
+<script type="text/javascript" language="JavaScript1.5">
+  $(document).ready(function(){
+     $('.link').click(function (){
+         var result=confirm("Are you Sure?");
+         if(result)
+             return true;
+         else
+            return false;
+      });
+  });
+</script>
+
+<div id="form">
+<% if flash[:alert] %>
+    <p id="notice" ><%= flash[:alert] %></p>
+<% end %>
+</div>
+
+<% if @users.length>0 %>
+    <fieldset style="width: 100%;">
+      <legend style="font-size: medium;">Listing Users</legend>
+      <table style="width: 100%;border: 1px solid;margin-top: 30px;margin-bottom: 20px;">
+        <tr>
+          <th style="text-align: left;">Name</th>
+          <th style="text-align: left;">Email</th>
+          <th style="text-align: left;">Admin</th>
+          <th></th>
+          <th></th>
+        </tr>
+
+        <% @users.each do |user| %>
+            <tr>
+
+              <td>
+                <%= link_to user do %>
+                <%= user.name %>
+                <% end %>
+              </td>
+              <td><%= user.email %></td>
+              <td>
+                <% if isAdmin? user %>
+                    <%= link_to  'Revoke', admin_user_url(user,{:act=>'revoke'}), :class=>"link" %>
+                <% else %>
+                    <%= link_to 'Grant', admin_user_url(user,{:act=>'grant'}),:class=>"link" %>
+                <% end %>
+              </td>
+              <td><%= link_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            </tr>
+        <% end %>
+      </table>
+    </fieldset>
+    <% else %>
+    <h1>No Users currently in the System.</h1>
+<% end %>

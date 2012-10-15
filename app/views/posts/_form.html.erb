@@ -1,0 +1,37 @@
+<%= form_for(@post) do |f| %>
+  <% if @post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+      <ul>
+      <% @post.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+ <fieldset>
+   <legend>Post</legend>
+   <table style="width: 100%;">
+     <tr>
+       <td><%= f.label :title %></td>
+        <td><%= f.text_field :title %></td>
+     </tr>
+     <tr>
+       <tr>
+         <td><%= f.label :content %></td>
+         <td><%= f.text_area :content %></td>
+     </tr>
+     <tr>
+       <td><%= f.label :Category %></td>
+       <td><%= f.select("Category_id", @categories.collect{|c|[c.name,c.id]} ) %></td>
+     </tr>
+     <tr>
+       <td style="text-align: center;" colspan="2">
+         <%= f.submit %>
+       </td>
+     </tr>
+   </table>
+ </fieldset>
+<% end %>

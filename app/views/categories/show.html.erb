@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<fieldset style="width: 100%;">
+  <legend style="font-size: medium;">Post</legend>
+  <table style="width: 100%;margin-top: 20px;border: 1px solid;">
+    <tr>
+      <td class="custom"><%= @category.name %></td>
+      <td class="content_pc"><%= @category.description %></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align: right;">
+        <%= link_to 'Edit', edit_category_path(@category) %>
+      </td>
+    </tr>
+  </table>
+
+</fieldset>
+
+<%= link_to 'Back', categories_path %>

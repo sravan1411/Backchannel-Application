@@ -1,0 +1,158 @@
+<script type="text/javascript" language="javascript1.5">
+  $(document).ready(function(){
+      $("div#votes").hide();
+      $('div[id*="cvotes"]').hide();
+
+      $(".clink").click(function(){
+          div_id=$(this).data('cid');
+          $("#"+div_id).dialog({
+              resizable: false,
+              height: 200,
+              modal: true,
+              autoOpen: true,
+              title : "Voted by",
+              buttons: {
+                  "Ok" : function(){
+                      $(this).dialog("close")
+                  }
+              }
+          });
+      });
+
+     $(".link").click(function(){
+        $("div#votes").dialog({
+            resizable: false,
+            height: 200,
+            modal: true,
+            autoOpen: true,
+            title : "Voted by",
+            buttons: {
+                "Ok" : function(){
+                    $(this).dialog("close")
+                }
+            }
+        });
+     });
+  });
+</script>
+
+<p id="notice"><%= notice %></p>
+
+<fieldset style="width: 100%;">
+  <legend>Post</legend>
+  <table style="width: 100%;background-color: #f8f8ff;" cellspacing="3">
+    <tr>
+      <td colspan="2" style="text-align: right;">
+        <% if (authenticated?) && !(IsAdmin?) %>
+        <%= link_to "Comment", :controller => 'comments',:action => 'new', :post_id=>@post.id %>
+      </td>
+        <% end %>
+    </tr>
+    <tr>
+      <td style="width: 20%; text-align: center; border: 1px solid;">
+        <div class="title"></div> <%= @username  %> </div>
+      </td>
+      <td style="text-align: left;">
+        <h2 class="title"><%= @post.title %></h2>
+        <div class="content_pc"><%=@post.content%><br/></div>
+        Category:
+        <div class="content_pc"><%= getCategory @post  %></div>
+      </td>
+    </tr>
+   <tr>
+     <td colspan="2" style="text-align: right;">
+        <% if IsCreatedByCurrentUser? @post.User_id %>
+       <%= link_to 'Edit', edit_post_path(@post), :class => "fblink" %>
+           <% end %>
+       <% if (IsCreatedByCurrentUser? @post.User_id) || (IsAdmin?) %>
+       &nbsp;<%= link_to 'Delete', @post, method: :delete, data: { confirm: 'Are you sure?' } %>
+       <% end %>
+     </td>
+   </tr>
+    <tr>
+      <td colspan="2" style="text-align: left;">
+        <% if !(@voted) && !(IsAdmin?) && !(IsCreatedByCurrentUser? @post.User_id)%>
+            <%= link_to "Vote", vote_post_path(@post)  %>
+        <% end %>
+        <% if (@votes.length>0) && !(IsAdmin?) %>
+
+            <% if @voted %>
+                You and <span class="link" style="cursor: pointer;color:#3B5998">
+                   <%= ((@votes.length)-1) %></span> others have voted.
+            <% else %>
+                        <span class="link" style="cursor: pointer;color:#3B5998">
+                   <%= (@votes.length) %></span> people have voted.
+            <% end %>
+        <% end %>
+        <div id='votes'>
+          <ul>
+            <% @votes.each do |vote|%>
+                <% if vote.User_id != session[:user_id] %>
+                    <li><%= getUserNamePosts vote.User_id %> </li>
+                <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <% if @comments.length >0 %>
+      <fieldset style="margin-top: 10px;">
+        <legend>Comments</legend>
+        <% @comments.each do |comment| %>
+            <table style="width: 100%;background-color: #f8f8ff; border: 1px solid;margin-top: 10px;">
+              <tr>
+                <td style="width: 20%;text-align: center;border: 1px solid;">
+                  <%= getUserName comment  %>
+                </td>
+                <td style="text-align: left;">
+                  <%= comment.content %>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" style="text-align: right;">
+                      <% if IsCreatedByCurrentUser? comment.User_id %>
+                      <%= link_to "Edit", edit_comment_path(comment,:post_id=>@post.id) %>
+                      <% end %>
+                  <% if (IsCreatedByCurrentUser? comment.User_id) || (IsAdmin?) %>
+                      &nbsp;<%= link_to "Delete", comment_path(comment, :post_id=>@post.id), method: :delete, data: { confirm: 'Are you sure?' } %>
+
+                <% end %>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" style="text-align: left;">
+                  <% if !(hasUserVotedComment? comment.id) && !(IsAdmin?) && !(IsCreatedByCurrentUser? comment.User_id) %>
+                      <%= link_to "Vote", vote_comment_path(comment)  %>
+                  <% end %>
+                  <% if (getCVotes(comment).length>0) && !(IsAdmin?) %>
+
+                      <% if hasUserVotedComment? comment %>
+                          You and <span class="clink" style="cursor: pointer;color:#3B5998" data-cid="cvotes<%= comment.id %>">
+                   <%= (getCVotes(comment).length)-1 %></span> others have voted.
+                      <% else %>
+                        <span class="clink" style="cursor: pointer;color:#3B5998" data-cid="cvotes<%= comment.id %>">
+                   <%= (getCVotes(comment).length) %></span> people have voted.
+                      <% end %>
+
+                  <% end %>
+                  <div id='cvotes<%= comment.id%>'>
+                    <ul>
+                      <% getCVotes(comment).each do |vote|%>
+                          <% if vote.User_id != session[:user_id] %>
+                              <li><%= getUserNamePosts vote.User_id %> </li>
+                          <% end %>
+                      <% end %>
+                    </ul>
+                  </div>
+
+                </td>
+              </tr>
+            </table>
+      <% end %>
+      </fieldset>
+  <% end %>
+</fieldset>
+<br/>
+<%= link_to 'View Posts', posts_path %>
+

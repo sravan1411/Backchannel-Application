@@ -1,0 +1,2 @@
+module CVotesHelper
+end
